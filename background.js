@@ -5,6 +5,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		chrome.tabs.sendMessage(tabs[0].id, {"message": "clicked_browser_action"});
 	});
 
+	// chrome.tabs.executeScript({
+ //    	code: 'document.getElementsByTagName("video")[0].pauseVideo();'
+ //  	});
+
 	// chrome.tabs.captureVisibleTab(function(img) {
 	// 	alert(img);
 	// });
