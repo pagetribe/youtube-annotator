@@ -4,10 +4,23 @@ chrome.runtime.onMessage.addListener(
 				// alert('clicked_browser_action');
 				// https://github.com/nishanths/youtube-pause-chrome/blob/master/src/scripts/youtube-pause-extension.js
 				// http://stackoverflow.com/a/9517879/3309046
+				//inject js
 				var s = document.createElement('script');
 				s.src = chrome.extension.getURL('inject.js');
 				s.onload = function() { this.parentNode.removeChild(this); };
 				(document.head||document.documentElement).appendChild(s);
+
+				//inject css
+				var link = document.createElement("link");
+				link.href = chrome.extension.getURL("content.css");
+				link.type = "text/css";
+				link.rel = "stylesheet";
+				document.getElementsByTagName("head")[0].appendChild(link);
+
+				//inject html
+				var div=document.createElement("div"); 
+				document.getElementById('eow-title').appendChild(div);
+				div.innerText="test123";
 			}
 		}
 );
