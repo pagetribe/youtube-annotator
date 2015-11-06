@@ -1,0 +1,28 @@
+body {
+  background-color: lightblue;
+  /* overflow: hidden; */
+}
+
+#slideout_inner {
+    position: fixed;
+    top: 40px;
+    right: -50px;
+    z-index: 100;
+    background: #6DAD53;
+    width: 200px;
+    padding: 25px;
+    height: 130px;
+    transition-duration: 0.3s;
+    text-align: left;;
+    border-radius: 0 0 5px 0;
+}
+
+#slideout_inner textarea {
+    width: 190px;
+    height: 100px;
+    margin-bottom: 6px;
+}
+
+.hello {
+    background-color: red;
+}

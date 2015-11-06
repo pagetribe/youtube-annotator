@@ -21,6 +21,32 @@ chrome.runtime.onMessage.addListener(
 				var div=document.createElement("div"); 
 				document.getElementById('eow-title').appendChild(div);
 				div.innerText="test123";
+
+
+				// var iFrame  = document.createElement("iframe");
+				// // iFrame.style.cssText = 'position:fixed;top:0;left:0;display:block; width:300px;height:100%;z-index:1000;';
+				// iFrame.src  = chrome.extension.getURL ("content.html");
+				// iFrame.id = "slideout_inner";
+				// document.body.appendChild(iFrame);
+
+				// document.body.insertBefore(iFrame, document.body.firstChild);
+			    // document.getElementById('eow-title').appendChild(iFrame);
+
+			    // read in contents of file
+			    var xhr = new XMLHttpRequest();
+				xhr.open('GET', chrome.extension.getURL('content.html'), true);
+				xhr.onreadystatechange = function()
+				{
+				    if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
+				    {
+				    	var div = document.createElement('div');
+    					div.innerHTML = xhr.responseText;
+				        //... The content has been read in xhr.responseText
+				        // alert(xhr.responseText);
+				         document.body.appendChild(div);
+				    }
+				};
+				xhr.send();
 			}
 		}
 );
