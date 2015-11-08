@@ -33,6 +33,7 @@ chrome.runtime.onMessage.addListener(
     					div.innerHTML = xhr.responseText;
 				        document.body.appendChild(div);
 				        setTimeout(function(){
+				        	//set image src from screenshot
 				        	document.getElementById('target').src = request.imgSrc;
 				        	document.getElementById('slideout_inner').style.right = 0;
 				        }, 1000)
@@ -41,6 +42,8 @@ chrome.runtime.onMessage.addListener(
 				};
 				xhr.send();
 
+				// this is being listened to in background.js
+				chrome.extension.sendMessage({ type: "up", dimensions: 9 });
 
 			}
 		}
