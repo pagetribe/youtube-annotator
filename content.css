@@ -6,13 +6,13 @@ body {
 #slideout_inner {
     position: fixed;
     top: 40px;
-    right: -50px;
+    right: -250px;
     z-index: 100;
     background: #6DAD53;
     width: 200px;
     padding: 25px;
-    height: 130px;
-    transition-duration: 0.3s;
+    height: 100%;
+    transition-duration: 0.5s;
     text-align: left;;
     border-radius: 0 0 5px 0;
 }
