@@ -10,7 +10,8 @@
 //content.js will call chrome.extension.sendMessage({ type: "up", dimensions: 9 });
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type === "up") {
-    	captureImage(sender.tab.id, request.dimensions);
+    	var capturedVidoeSrc = captureImage(sender.tab.id, request.dimensions);
+    	sendResponse({capturedVidoeSrc: capturedVidoeSrc});
     }
 });
 
@@ -49,8 +50,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 // });
 
 var canvas = null;
-function captureImage() {
-	alert('hadswf');
+var croppedDataUrl ="";
+
+function captureImage(tabId, dimensions) {
+	
 	chrome.tabs.captureVisibleTab(function(dataUrl) {
 	// chrome.tabs.captureVisibleTab(tabs[0].id { format: "png" }, function(dataUrl) {
         if (!canvas) {
@@ -68,12 +71,13 @@ function captureImage() {
                 0, 0,
                 dimensions.width, dimensions.height
             );
-            var croppedDataUrl = canvas.toDataURL("image/png");
-            chrome.tabs.create({
-                url: croppedDataUrl,
-                windowId: tab.windowId
-            });
+            croppedDataUrl = canvas.toDataURL("image/jpg");
+            // chrome.tabs.create({
+            //     url: croppedDataUrl,
+            //     windowId: tab.windowId
+            // });
         }
         image.src = dataUrl;
     });
+    return croppedDataUrl;
 }

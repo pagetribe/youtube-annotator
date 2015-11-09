@@ -34,17 +34,41 @@ chrome.runtime.onMessage.addListener(
 				        document.body.appendChild(div);
 				        setTimeout(function(){
 				        	//set image src from screenshot
-				        	document.getElementById('target').src = request.imgSrc;
+				        	// document.getElementById('target').src = request.imgSrc;
+				        	// "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwME…j+L3jrwFql7qMtjpXhuS5upY7OV4rmeVmgMSpIuDGAYmLOCGGAFwTuT1eigAooooAKKKKAP//Z"
+				        	// "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaoAAADwCAYAAABR7SDTAAAgAElEQ…SCuTeV+nN6T1T0I82jevZGKc6PNehREkp7w4Dx6Rrz8f8A6Vcv2JjUq8IAAAAASUVORK5CYII="
+				        			// this is being listened to in background.js
+
+				        	// ytp-chrome-bottom = controls -> hide
+							chrome.extension.sendMessage({ type: "up", dimensions: videoDimensions() }, function(response){
+								document.getElementById('target').src = response.capturedVidoeSrc;
+								// ytp-chrome-bottom = controls -> unhide controls
+							});
 				        	document.getElementById('slideout_inner').style.right = 0;
 				        }, 1000)
 				        
 				    }
 				};
 				xhr.send();
-
-				// this is being listened to in background.js
-				chrome.extension.sendMessage({ type: "up", dimensions: 9 });
-
 			}
 		}
 );
+
+function videoDimensions(){
+	var dimensions = {};
+	var elem = document.getElementsByClassName('html5-video-content')[0];
+
+	dimensions.width = elem.offsetWidth;
+	dimensions.height = elem.offsetHeight;
+	dimensions.top = -window.scrollY;
+    dimensions.left = -window.scrollX;
+
+	while (elem !== document.body) {
+        dimensions.top += elem.offsetTop;
+        dimensions.left += elem.offsetLeft;
+        elem = elem.offsetParent;
+    }
+
+	console.log(dimensions);
+	return dimensions;
+}
