@@ -18,10 +18,15 @@ chrome.runtime.onMessage.addListener(
 				document.getElementsByTagName("head")[0].appendChild(link);
 
 				//inject html
-				var div=document.createElement("div"); 
-				document.getElementById('eow-title').appendChild(div);
-				div.innerText="test123";
+				// var div=document.createElement("div"); 
+				// document.getElementById('eow-title').appendChild(div);
+				// div.innerText="test123";
 
+				var slide_out = document.getElementById('slideout_inner');
+				
+				if(slide_out == null) {
+					console.log('slide_out does not extist');
+				}
 			    // read in contents of file
 			    var xhr = new XMLHttpRequest();
 				xhr.open('GET', chrome.extension.getURL('content.html'), true);
@@ -32,6 +37,7 @@ chrome.runtime.onMessage.addListener(
 				    	var div = document.createElement('div');
     					div.innerHTML = xhr.responseText;
 				        document.body.appendChild(div);
+
 				        setTimeout(function(){
 				        	//set image src from screenshot
 				        	// document.getElementById('target').src = request.imgSrc;
@@ -69,6 +75,5 @@ function videoDimensions(){
         elem = elem.offsetParent;
     }
 
-	console.log(dimensions);
 	return dimensions;
 }
