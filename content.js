@@ -17,15 +17,29 @@ chrome.runtime.onMessage.addListener(
 				link.rel = "stylesheet";
 				document.getElementsByTagName("head")[0].appendChild(link);
 
+				var googleFontsCss = document.createElement("link");
+				googleFontsCss.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
+				googleFontsCss.type = "text/css";
+				googleFontsCss.rel = "stylesheet";
+				document.getElementsByTagName("head")[0].appendChild(googleFontsCss);
+
+				var vidControls = document.getElementsByClassName("ytp-chrome-controls")[0];
+				vidControls.insertAdjacentHTML('beforeend', "<i class='material-icons md-light' id='camera-icon'>camera</i>");
+
+				var cameraDiv = document.getElementById('camera-icon');
+				cameraDiv.addEventListener("click", handleCameraIconClick);
+
+
 				//inject html
 				// var div=document.createElement("div"); 
 				// document.getElementById('eow-title').appendChild(div);
 				// div.innerText="test123";
 
 				var slide_out = document.getElementById('slideout_inner');
+
 				
 				if(slide_out == null) {
-					console.log('slide_out does not extist');
+					// console.log('slide_out does not extist');
 				}
 			    // read in contents of file
 			    var xhr = new XMLHttpRequest();
@@ -38,20 +52,20 @@ chrome.runtime.onMessage.addListener(
     					div.innerHTML = xhr.responseText;
 				        document.body.appendChild(div);
 
-				        setTimeout(function(){
-				        	//set image src from screenshot
-				        	// document.getElementById('target').src = request.imgSrc;
-				        	// "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwME…j+L3jrwFql7qMtjpXhuS5upY7OV4rmeVmgMSpIuDGAYmLOCGGAFwTuT1eigAooooAKKKKAP//Z"
-				        	// "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaoAAADwCAYAAABR7SDTAAAgAElEQ…SCuTeV+nN6T1T0I82jevZGKc6PNehREkp7w4Dx6Rrz8f8A6Vcv2JjUq8IAAAAASUVORK5CYII="
-				        			// this is being listened to in background.js
+				   //      setTimeout(function(){
+				   //      	//set image src from screenshot
+				   //      	// document.getElementById('target').src = request.imgSrc;
+				   //      	// "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwME…j+L3jrwFql7qMtjpXhuS5upY7OV4rmeVmgMSpIuDGAYmLOCGGAFwTuT1eigAooooAKKKKAP//Z"
+				   //      	// "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaoAAADwCAYAAABR7SDTAAAgAElEQ…SCuTeV+nN6T1T0I82jevZGKc6PNehREkp7w4Dx6Rrz8f8A6Vcv2JjUq8IAAAAASUVORK5CYII="
+				   //      			// this is being listened to in background.js
 
-				        	// ytp-chrome-bottom = controls -> hide
-							chrome.extension.sendMessage({ type: "up", dimensions: videoDimensions() }, function(response){
-								document.getElementById('target').src = response.capturedVidoeSrc;
-								// ytp-chrome-bottom = controls -> unhide controls
-							});
-				        	document.getElementById('slideout_inner').style.right = 0;
-				        }, 1000)
+				   //      	// ytp-chrome-bottom = controls -> hide
+							// chrome.extension.sendMessage({ type: "up", dimensions: videoDimensions() }, function(response){
+							// 	document.getElementById('target').src = response.capturedVidoeSrc;
+							// 	// ytp-chrome-bottom = controls -> unhide controls
+							// });
+				   //      	document.getElementById('slideout_inner').style.right = 0;
+				   //      }, 1000)
 				        
 				    }
 				};
@@ -60,20 +74,34 @@ chrome.runtime.onMessage.addListener(
 		}
 );
 
+function handleCameraIconClick (argument) {
+	console.log('before send message');
+	chrome.runtime.sendMessage({message: "cameraIconClicked", dimensions: videoDimensions() }, function(response) {
+		//NOTE TODO: insert new element rather than updating response
+		document.getElementById('target').src = response.capturedVidoeSrc;
+		
+		console.log(response.capturedVidoeSrc);
+	});
+}
+
 function videoDimensions(){
 	var dimensions = {};
-	var elem = document.getElementsByClassName('html5-video-content')[0];
+	// var elem = document.getElementsByClassName('html5-video-content')[0];
 
-	dimensions.width = elem.offsetWidth;
-	dimensions.height = elem.offsetHeight;
-	dimensions.top = -window.scrollY;
-    dimensions.left = -window.scrollX;
+	// dimensions.width = elem.offsetWidth;
+	// dimensions.height = elem.offsetHeight;
+	// dimensions.top = -window.scrollY;
+ //    dimensions.left = -window.scrollX;
 
-	while (elem !== document.body) {
-        dimensions.top += elem.offsetTop;
-        dimensions.left += elem.offsetLeft;
-        elem = elem.offsetParent;
-    }
+	// while (elem !== document.body) {
+ //        dimensions.top += elem.offsetTop;
+ //        dimensions.left += elem.offsetLeft;
+ //        elem = elem.offsetParent;
+ //    }
 
+ 	dimensions.width = 600;
+	dimensions.height = 600;
+    dimensions.left = 0;
+    dimensions.top = 0;
 	return dimensions;
 }

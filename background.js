@@ -8,12 +8,20 @@
 
 //This will accept messages send form the content.js
 //content.js will call chrome.extension.sendMessage({ type: "up", dimensions: 9 });
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type === "up") {
-    	var capturedVidoeSrc = captureImage(sender.tab.id, request.dimensions);
+// chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+//     if (request.type === "up") {
+//     	var capturedVidoeSrc = captureImage(sender.tab.id, request.dimensions);
+//     	sendResponse({capturedVidoeSrc: capturedVidoeSrc});
+//     }
+// });
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if(request.message === "cameraIconClicked") {
+		var capturedVidoeSrc = captureImage(sender.tab.id, request.dimensions);
     	sendResponse({capturedVidoeSrc: capturedVidoeSrc});
-    }
-});
+    	croppedDataUrl='';
+	}
+})
 
 
 
@@ -21,10 +29,11 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.browserAction.onClicked.addListener(function(tab) {
 	// send a message to the active tab
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		chrome.tabs.sendMessage(tabs[0].id, {"message": "clicked_browser_action"});
 		// captureImage();
-		chrome.tabs.captureVisibleTab(function(imgSrc) {
-			chrome.tabs.sendMessage(tabs[0].id, {"message": "clicked_browser_action", "imgSrc": imgSrc});
-		});
+		// chrome.tabs.captureVisibleTab(function(imgSrc) {
+		// 	chrome.tabs.sendMessage(tabs[0].id, {"message": "clicked_browser_action", "imgSrc": imgSrc});
+		// });
 		
 	});
 
@@ -53,31 +62,33 @@ var canvas = null;
 var croppedDataUrl ="";
 
 function captureImage(tabId, dimensions) {
-	
-	chrome.tabs.captureVisibleTab(function(dataUrl) {
-	// chrome.tabs.captureVisibleTab(tabs[0].id { format: "png" }, function(dataUrl) {
-        if (!canvas) {
-            canvas = document.createElement("canvas");
-            document.body.appendChild(canvas);
-        }
-        var image = new Image();
-        image.onload = function() {
-            canvas.width = dimensions.width;
-            canvas.height = dimensions.height;
-            var context = canvas.getContext("2d");
-            context.drawImage(image,
-                dimensions.left, dimensions.top,
-                dimensions.width, dimensions.height,
-                0, 0,
-                dimensions.width, dimensions.height
-            );
-            croppedDataUrl = canvas.toDataURL("image/jpg");
-            // chrome.tabs.create({
-            //     url: croppedDataUrl,
-            //     windowId: tab.windowId
-            // });
-        }
-        image.src = dataUrl;
-    });
+	chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+		croppedDataUrl = screenshotUrl;
+	});
+	// chrome.tabs.captureVisibleTab(function(dataUrl) {
+	// // chrome.tabs.captureVisibleTab(tabs[0].id { format: "png" }, function(dataUrl) {
+ //        if (!canvas) {
+ //            canvas = document.createElement("canvas");
+ //            document.body.appendChild(canvas);
+ //        }
+ //        var image = new Image();
+ //        image.onload = function() {
+ //            canvas.width = dimensions.width;
+ //            canvas.height = dimensions.height;
+ //            var context = canvas.getContext("2d");
+ //            context.drawImage(image,
+ //                dimensions.left, dimensions.top,
+ //                dimensions.width, dimensions.height,
+ //                0, 0,
+ //                dimensions.width, dimensions.height
+ //            );
+ //            croppedDataUrl = canvas.toDataURL("image/jpg");
+ //            // chrome.tabs.create({
+ //            //     url: croppedDataUrl,
+ //            //     windowId: tab.windowId
+ //            // });
+ //        }
+ //        image.src = dataUrl;
+ //    });
     return croppedDataUrl;
 }
