@@ -75,11 +75,16 @@ chrome.runtime.onMessage.addListener(
 );
 
 function handleCameraIconClick (argument) {
-	console.log('before send message');
+	// console.log('before send message');
 	chrome.runtime.sendMessage({message: "cameraIconClicked", dimensions: videoDimensions() }, function(response) {
 		//NOTE TODO: insert new element rather than updating response
-		document.getElementById('target').src = response.capturedVidoeSrc;
-		
+		var img = document.createElement('img');
+		img.className = 'captured-image';
+		img.src = response.capturedVidoeSrc;
+		div.appendChild(img);
+		var slide_out = document.getElementById('slideout_inner');
+		slide_out.appendChild(img);
+		// document.getElementById('target').src = response.capturedVidoeSrc;
 		console.log(response.capturedVidoeSrc);
 	});
 }
