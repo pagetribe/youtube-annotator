@@ -36,3 +36,6 @@ body {
 #camera-icon:hover {
     color: rgba(255, 255, 255, 1);
 }
+.captured-image {
+    width: 90px;
+}

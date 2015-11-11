@@ -14,15 +14,46 @@
 //     	sendResponse({capturedVidoeSrc: capturedVidoeSrc});
 //     }
 // });
-
+var canvas = null;
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	
 	if(request.message === "cameraIconClicked") {
-		var capturedVidoeSrc = captureImage(sender.tab.id, request.dimensions);
-    	sendResponse({capturedVidoeSrc: capturedVidoeSrc});
-    	croppedDataUrl='';
-	}
-})
 
+		var croppedDataUrl = '';
+		chrome.tabs.captureVisibleTab(null, null, function(screenshotUrl) 
+	    {
+	        if (!canvas) {
+        		canvas = document.createElement("canvas");
+    		}
+	        var image = new Image();
+	        var context = canvas.getContext('2d');
+	        canvas.width = request.dimensions.width;
+            canvas.height = request.dimensions.height;
+	        image.onload = function() {
+	            context.drawImage(image, request.dimensions.left, request.dimensions.top, request.dimensions.width, request.dimensions.height, 0, 0, request.dimensions.width, request.dimensions.height );
+	            var cropped = canvas.toDataURL('image/jpg', 90);
+	            sendResponse({capturedVidoeSrc: cropped});
+	        }
+	        image.src = screenshotUrl;
+	     });
+
+		// this works capture whole tab  #########################################################################
+		// chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+		// 	sendResponse({capturedVidoeSrc: screenshotUrl});
+		// });
+		// #######################################################################################################
+
+		// var capturedVidoeSrc = captureImage(sender.tab.id, request.dimensions);
+		// capture();
+    	// sendResponse({capturedVidoeSrc: imgUrl});
+
+    	// croppedDataUrl='';
+    	// croppedDataUrl.url = "hello";
+    	// sendResponse({capturedVidoeSrc: croppedDataUrl.url});
+
+    	return true;
+	}
+});
 
 
 // Listens for click on the icon
@@ -58,13 +89,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 //     chrome.tabs.sendMessage(tab.id, { type: "start" }, function(response) {});
 // });
 
-var canvas = null;
-var croppedDataUrl ="";
+// var canvas = null;
+// function captureImage(tabId, dimensions, croppedDataUrl) {
 
-function captureImage(tabId, dimensions) {
-	chrome.tabs.captureVisibleTab(function(screenshotUrl) {
-		croppedDataUrl = screenshotUrl;
-	});
 	// chrome.tabs.captureVisibleTab(function(dataUrl) {
 	// // chrome.tabs.captureVisibleTab(tabs[0].id { format: "png" }, function(dataUrl) {
  //        if (!canvas) {
@@ -90,5 +117,5 @@ function captureImage(tabId, dimensions) {
  //        }
  //        image.src = dataUrl;
  //    });
-    return croppedDataUrl;
-}
+    // return x;
+// }

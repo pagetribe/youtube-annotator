@@ -81,7 +81,7 @@ function handleCameraIconClick (argument) {
 		var img = document.createElement('img');
 		img.className = 'captured-image';
 		img.src = response.capturedVidoeSrc;
-		div.appendChild(img);
+		// div.appendChild(img);
 		var slide_out = document.getElementById('slideout_inner');
 		slide_out.appendChild(img);
 		// document.getElementById('target').src = response.capturedVidoeSrc;
@@ -91,22 +91,22 @@ function handleCameraIconClick (argument) {
 
 function videoDimensions(){
 	var dimensions = {};
-	// var elem = document.getElementsByClassName('html5-video-content')[0];
+	var elem = document.getElementsByClassName('html5-video-content')[0];
 
-	// dimensions.width = elem.offsetWidth;
-	// dimensions.height = elem.offsetHeight;
-	// dimensions.top = -window.scrollY;
- //    dimensions.left = -window.scrollX;
+	dimensions.width = elem.offsetWidth;
+	dimensions.height = elem.offsetHeight;
+	dimensions.top = -window.scrollY;
+    dimensions.left = -window.scrollX;
 
-	// while (elem !== document.body) {
- //        dimensions.top += elem.offsetTop;
- //        dimensions.left += elem.offsetLeft;
- //        elem = elem.offsetParent;
- //    }
+	while (elem !== document.body) {
+        dimensions.top += elem.offsetTop;
+        dimensions.left += elem.offsetLeft;
+        elem = elem.offsetParent;
+    }
 
- 	dimensions.width = 600;
-	dimensions.height = 600;
-    dimensions.left = 0;
-    dimensions.top = 0;
+ // 	dimensions.width = 600;
+	// dimensions.height = 600;
+ //    dimensions.left = 0;
+ //    dimensions.top = 0;
 	return dimensions;
 }
