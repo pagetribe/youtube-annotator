@@ -2,16 +2,17 @@ var express = require('express');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/yt-test');
 
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function (callback) {
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+	console.log('db connection succeeded.');
 // 	var kittySchema = mongoose.Schema({
 // 		name: String
 // 	});	
 // 	var Kitten = mongoose.model('Kitten', kittySchema);
 // 	var silence = new Kitten({name: 'Silence'});
 // 	console.log(silence.name);
-// });
+});
 
 var Note = require('./models/note');
 
