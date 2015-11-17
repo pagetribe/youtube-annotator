@@ -55,6 +55,17 @@ router.route('/notes')
 		});
 	});
 
+router.route('/notes/:note_id')
+	// get the note with id http://localhost:8080/api/notes/:note_id
+	.get(function(req, res) {
+		Note.findById(req.params.note_id, function(err, note){
+			if(err){
+				res.send(err);
+			}
+			res.json(note);
+		});
+	})
+
 //register routes all prefixed with api
 app.use('/api', router);
 
