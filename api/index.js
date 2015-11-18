@@ -56,16 +56,46 @@ router.route('/notes')
 		});
 	});
 
-router.route('/notes/:note_id')
-	// get the note with id http://localhost:8080/api/notes/:note_id
+router.route('/notes/:id')
+	// get the note with id http://localhost:8080/api/notes/:id
 	.get(function(req, res) {
-		Note.findById(req.params.note_id, function(err, note){
+		Note.findById(req.params.id, function(err, note){
 			if(err){
 				res.send(err);
 			}
 			res.json(note);
 		});
 	})
+
+	// put update the note with this id http://localhost:8080/api/notes/:id
+	.put(function(req, res){
+		Note.findById(req.params.id, function(err, note){
+			if (err) {
+				res.send(err);
+			}
+			note.name = req.body.name; // update note info
+			note.save(function(err){
+				if (err) {
+					res.send(err);
+				}
+				res.json({message: 'Note updated!'});
+			});
+		});
+	})
+
+	// delete the note with id http://localhost:8080/api/notes/id
+	.delete(function(req, res){
+		Note.remove({
+			_id: req.params.id
+		}, function(err, note){
+			if (err) {
+				res.send(err);
+			}
+			res.json({message: 'Successfully deleted'})
+		});
+	});
+
+
 
 //register routes all prefixed with api
 app.use('/api', router);
