@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<form id="note-form">
+			<textarea rows="4" cols="50" name="name" class='note'></textarea>
+			<br>
+			<input type="submit" value="save" id="form-submit">
+		</form>
+		 <button type="button">insert new text area</button> 
+	</body>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+		var $form = $('#note-form');
+		var noteId = '';
+		var baseUrl = 'http://localhost:8080/api/notes/';
+
+		$form.on('submit', function(e) {
+ 			e.preventDefault();
+ 		});
+
+		$('#form-submit').on('click', function(){
+			// if not exists issue PUT else POST
+			if(noteId) {
+				putRequest($form.serialize());
+			}
+			else {
+				postRequest($form.serialize());
+			}
+		});
+
+		function createNewTextArea(){
+			// <textarea rows="4" cols="50" name="name" class='note'></textarea>
+			var div = document.getElementById("note-from");
+			var input = document.createElement("textarea");
+			input.name = "name";
+			input.cols = "50";
+			input.rows = "4";
+			div.appendChild(input); //appendChild
+		}
+
+		//helper functions
+		function putRequest(data) {
+			$.ajax({
+				  url: baseUrl + noteId,
+				  method: 'PUT',
+				  data: data
+				}).done(function() {
+				  console.log('updated');
+				});
+		}
+
+		function postRequest(data) {
+			$.post(baseUrl, data)
+				.done(function(data){
+					noteId = data.id;
+					console.log(noteId);
+				})
+		}
+
+		// prevent form sumission
+
+
+		// 1st time post /api/notes
+		// 
+		// var form = document.getElementById('note-form');
+		// form.addEventListener("submit", function() {
+			
+		// });
+		// var sumitButton = document.getElementById('form-submit');
+		// sumitButton.addEventListener("click", function(){
+		// 	alert('clicked');
+		// })
+	</script>
+</html>

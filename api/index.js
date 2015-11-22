@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/yt-test');
+var path = require('path');
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -28,12 +29,14 @@ var port = process.env.PORT || 8080; //set our port
 
 router.get('/', function(req, res) {
 	// res.send('hello world');
-	res.json({message: 'yay '})
+	// res.json({message: 'yay '})
+	res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 router.route('/notes')
 	// post http://localhost:8080/api/notes
 	.post(function(req, res) {
+		console.log(req.body);
 		var note = new Note(); //create new instance of note model
 		note.name = req.body.name; //set the note name from request
 		console.log(req.body.name);
@@ -42,7 +45,7 @@ router.route('/notes')
 			if(err) {
 				res.send(err);
 			}
-			res.json({message: 'Note Created!'});
+			res.json({message: 'Note Created!', id: note.id});
 		});
 	})
 

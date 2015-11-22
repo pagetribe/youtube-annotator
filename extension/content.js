@@ -65,25 +65,28 @@ chrome.runtime.onMessage.addListener(
 							// 	document.getElementById('target').src = response.capturedVidoeSrc;
 							// 	// ytp-chrome-bottom = controls -> unhide controls
 							// });
-				   //      	document.getElementById('slideout_inner').style.right = 0;
+				        	document.getElementById('slideout_inner').style.right = 0;
 				   //      }, 1000)
 				        
 				    }
 				};
 				xhr.send();
+
+				// load externa form page
+				loadExternalPage();
 			}
 		}
 );
 
 function loadExternalPage() {
-	// chrome.runtime.sendMessage({
-	//     method: 'POST',
-	//     action: 'xhttp',
-	//     url: 'http://localhost:8080/api'
-	// }, function(responseText) {
-	//     alert(responseText);
-	//     /*Callback function to deal with the response*/
-	// });
+	chrome.runtime.sendMessage({
+	    method: 'GET',
+	    action: 'xhttp',
+	    url: 'http://localhost:8080/api'
+	}, function(responseText) {
+	    alert(responseText);
+	    /*Callback function to deal with the response*/
+	});
 }
 
 function handleCameraIconClick (argument) {
