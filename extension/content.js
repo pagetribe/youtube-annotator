@@ -78,13 +78,18 @@ chrome.runtime.onMessage.addListener(
 		}
 );
 
+// this works but all xhr request need to run via message passing use the 
+// sendMessage below to communicate with localhost
 function loadExternalPage() {
 	chrome.runtime.sendMessage({
 	    method: 'GET',
 	    action: 'xhttp',
 	    url: 'http://localhost:8080/api'
 	}, function(responseText) {
-	    alert(responseText);
+		// alert(responseText);
+		var div = document.createElement('div');
+    	div.innerHTML = responseText;
+    	document.getElementById('slideout_inner').appendChild(div);
 	    /*Callback function to deal with the response*/
 	});
 }
