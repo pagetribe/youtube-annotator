@@ -1,3 +1,7 @@
+var noteId = '';
+var baseUrl = 'http://localhost:8080/api/notes/';
+var $form;
+
 chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if( request.message === "clicked_browser_action" ) {
@@ -52,47 +56,60 @@ chrome.runtime.onMessage.addListener(
 				    	var div = document.createElement('div');
     					div.innerHTML = xhr.responseText;
 				        document.body.appendChild(div);
-
-				   //      setTimeout(function(){
-				   //      	//set image src from screenshot
-				   //      	// document.getElementById('target').src = request.imgSrc;
-				   //      	// "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwME…j+L3jrwFql7qMtjpXhuS5upY7OV4rmeVmgMSpIuDGAYmLOCGGAFwTuT1eigAooooAKKKKAP//Z"
-				   //      	// "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaoAAADwCAYAAABR7SDTAAAgAElEQ…SCuTeV+nN6T1T0I82jevZGKc6PNehREkp7w4Dx6Rrz8f8A6Vcv2JjUq8IAAAAASUVORK5CYII="
-				   //      			// this is being listened to in background.js
-
-				   //      	// ytp-chrome-bottom = controls -> hide
-							// chrome.extension.sendMessage({ type: "up", dimensions: videoDimensions() }, function(response){
-							// 	document.getElementById('target').src = response.capturedVidoeSrc;
-							// 	// ytp-chrome-bottom = controls -> unhide controls
-							// });
-				        	document.getElementById('slideout_inner').style.right = 0;
-				   //      }, 1000)
+				        document.getElementById('slideout_inner').style.right = 0;
 				        
+				        $form = $('#note-form');
+				        $form.on('submit', function(e) {
+				 			e.preventDefault();
+				 		});
+
+						$('#form-submit').on('click', function(){
+							// if not exists issue PUT else POST
+							if(noteId) {
+								xhrRequest($form.serialize(), 'PUT', noteId);
+							}
+							else {
+								xhrRequest($form.serialize(), 'POST');
+							}
+						});
+
 				    }
 				};
 				xhr.send();
 
 				// load externa form page
-				loadExternalPage();
+				// loadExternalPage();
 			}
 		}
 );
 
-// this works but all xhr request need to run via message passing use the 
-// sendMessage below to communicate with localhost
-function loadExternalPage() {
+function xhrRequest (data, method, id) {
 	chrome.runtime.sendMessage({
-	    method: 'GET',
-	    action: 'xhttp',
-	    url: 'http://localhost:8080/api'
+		data: data,
+		method: method,
+		action: 'xhttp',
+		url: baseUrl + (id || "")
 	}, function(responseText) {
-		// alert(responseText);
-		var div = document.createElement('div');
-    	div.innerHTML = responseText;
-    	document.getElementById('slideout_inner').appendChild(div);
-	    /*Callback function to deal with the response*/
+		console.log(responseText);
+		noteId = JSON.parse(responseText).id;
 	});
 }
+
+// this works but all xhr request need to run via message passing use the 
+// sendMessage below to communicate with localhost
+// function loadExternalPage() {
+// 	chrome.runtime.sendMessage({
+// 	    method: 'GET',
+// 	    action: 'xhttp',
+// 	    url: 'http://localhost:8080/api'
+// 	}, function(responseText) {
+// 		// alert(responseText);
+// 		var div = document.createElement('div');
+//     	div.innerHTML = responseText;
+//     	document.getElementById('slideout_inner').appendChild(div);
+// 	    /*Callback function to deal with the response*/
+// 	});
+// }
 
 function handleCameraIconClick (argument) {
 	// console.log('before send message');
@@ -124,9 +141,6 @@ function videoDimensions(){
         elem = elem.offsetParent;
     }
 
- // 	dimensions.width = 600;
-	// dimensions.height = 600;
- //    dimensions.left = 0;
- //    dimensions.top = 0;
 	return dimensions;
 }
+

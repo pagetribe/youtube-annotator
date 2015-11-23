@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             sendResponse();
         };
         xhttp.open(method, request.url, true);
-        if (method == 'POST') {
+        if (method === 'POST' || 'PUT') {
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
         xhttp.send(request.data);
