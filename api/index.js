@@ -1,3 +1,9 @@
+var common = require('./common.js')
+var config = common.config();
+
+console.log(config.imgurId);
+
+
 var express = require('express');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/yt-test');
