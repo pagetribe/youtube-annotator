@@ -1,7 +1,8 @@
 var common = require('./common.js')
 var config = common.config();
 
-console.log(config.imgurId);
+console.log(config.imgur.client_id);
+
 
 
 var express = require('express');
